@@ -405,5 +405,10 @@ class PermissionSeeder extends Seeder
             "battery" => 15
         ]);
 
+        $user1->update(["created_by"=> 1]);
+        $user2->update(["created_by"=> 1]);
+        $user3->update(["created_by"=> 1]);
+        $user4->update(["created_by"=> 1]);
+
     }
 }
