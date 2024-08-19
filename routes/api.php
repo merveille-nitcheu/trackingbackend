@@ -59,6 +59,7 @@ Route::middleware('auth:sanctum')->prefix('sensor-record')
         ->as('sensor_record.')
         ->group(function(){
             Route::post('store', [SensorRecordController::class, 'storeSensorRecord']);
+            Route::post('storepayloadrecord', [SensorRecordController::class, 'storePayloadRecord']);
             Route::post('find-by-sensor-id-and-period',
                             [SensorRecordController::class, 'findListRecordBySensorIdAndPeriod']);
             Route::post('delete', [SensorRecordController::class, 'deleteSensorRecord']);

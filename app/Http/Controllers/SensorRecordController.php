@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NewRecordSend;
-use App\Http\Requests\DeleteSensorRecordRequest;
-use App\Http\Requests\FindBySensorAndPeriodSensorRecordRequest;
-use App\Http\Requests\FindLastSensorRecordBySiteIdRequest;
-use App\Http\Requests\StoreSensorRecordRequest;
 use App\Models\Sensor;
 use App\Models\SensorRecord;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Events\NewRecordSend;
+use App\Models\SensorPayload;
 use Illuminate\Support\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreSensorRecordRequest;
+use App\Http\Requests\DeleteSensorRecordRequest;
+use App\Http\Requests\FindLastSensorRecordBySiteIdRequest;
+use App\Http\Requests\FindBySensorAndPeriodSensorRecordRequest;
 
 class SensorRecordController extends Controller
 {
@@ -36,6 +37,33 @@ class SensorRecordController extends Controller
         }
         return $this->error("Error while storing sensor record");
     }
+
+
+    public function storePayloadRecord(Request $request):JsonResponse {
+
+      $payloadData = $request->all();
+
+      // Extract the device ID
+      $deviceId = $payloadData['identifiers'][0]['device_ids']['device_id'];
+
+
+      $temperature = $payloadData['data']['uplink_message']['decoded_payload']['ic_temperature'];
+
+
+      $record = SensorPayload::create([
+          'device_id' => $deviceId,
+          'temperature' => $temperature,
+
+      ]);
+
+      if ($record) {
+          return $this->success([
+              "sensor_record" => $record,
+          ], "Sensor record stored successfully");
+      } else {
+          return $this->error("Failed to store sensor record");
+      }
+  }
 
     /**
      * send the new record to the map
