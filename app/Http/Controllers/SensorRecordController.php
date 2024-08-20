@@ -27,9 +27,11 @@ class SensorRecordController extends Controller
      */
     public function storeSensorRecord(StoreSensorRecordRequest $request): JsonResponse
     {
+
         $payloadData = $request->all();
         $deviceId = $payloadData['data']['end_device_ids']['device_id'];
         $sensor = Sensor::where('sensor_reference', $deviceId)->first();
+        Log::info('Payload reçu :', ['data' => $payloadData]);
         $data = [
             'sensor_id' => $sensor->id,
             'battery' => floatval(str_replace('V', '', $payloadData['data']['uplink_message']['decoded_payload']['battery_voltage'])),
@@ -43,6 +45,7 @@ class SensorRecordController extends Controller
             // Create the SensorRecord
             $record = SensorRecord::create($data);
         }
+        Log::info('Payload reçu :', ['record' => $record]);
 
         if (isset($record)) {
             //TODO mise a jour plateforme
