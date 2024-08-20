@@ -9,6 +9,7 @@ use App\Events\NewRecordSend;
 use App\Models\SensorPayload;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreSensorRecordRequest;
 use App\Http\Requests\DeleteSensorRecordRequest;
@@ -49,10 +50,10 @@ class SensorRecordController extends Controller
 
     // $temperature_numerique = str_replace("°C", "", $temperature);
     // $temperature_numerique = intval($temperature_numerique);
+    Log::info('Payload reçu :', ['data' => $payloadData]);
 
       $record = SensorPayload::create([
           'device_id' => 'true',
-
 
       ]);
 
