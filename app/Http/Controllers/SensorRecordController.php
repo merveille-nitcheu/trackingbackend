@@ -42,19 +42,21 @@ class SensorRecordController extends Controller
     public function storePayloadRecord(Request $request):JsonResponse {
 
       $payloadData = $request->all();
-
       // Extract the device ID
       $deviceId = $payloadData['identifiers'][0]['device_ids']['device_id'];
 
-
       $temperature = $payloadData['data']['uplink_message']['decoded_payload']['ic_temperature'];
 
+    $temperature_numerique = str_replace("°C", "", $temperature);
+    $temperature_numerique = intval($temperature_numerique);
 
       $record = SensorPayload::create([
           'device_id' => $deviceId,
-          'temperature' => $temperature,
+          'temperature' => $temperature_numerique,
 
       ]);
+
+
 
       if ($record) {
           return $this->success([

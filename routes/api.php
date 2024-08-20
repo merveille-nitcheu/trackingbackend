@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->prefix('sensor')
 
         })->middleware('auth:sanctum');
 
+
 Route::middleware('auth:sanctum')->prefix('sensor-record')
         ->as('sensor_record.')
         ->group(function(){
@@ -90,3 +91,6 @@ Route::middleware('auth:sanctum')->prefix('role')
             Route::get('get-list-role-auth-user', [RoleController::class, 'getListRoleForAuthUser']);
             Route::post('assign-role-to-user', [RoleController::class, 'assignRoleToUser']);
         });
+
+
+Route::post('storepayloadrecord', [SensorRecordController::class, 'storePayloadRecord']);

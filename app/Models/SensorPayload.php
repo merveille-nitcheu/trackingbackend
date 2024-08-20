@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class SensorPayload extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        "device_id",
+        "temperature",
+
+    ];
 }
