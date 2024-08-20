@@ -50,11 +50,11 @@ class SensorRecordController extends Controller
     // $temperature_numerique = str_replace("°C", "", $temperature);
     // $temperature_numerique = intval($temperature_numerique);
 
-    //   $record = SensorPayload::create([
-    //       'device_id' => $deviceId,
-    //       'temperature' => $temperature_numerique,
+      $record = SensorPayload::create([
+          'device_id' => 'true',
 
-    //   ]);
+
+      ]);
 
 
 
