@@ -182,7 +182,7 @@ class PermissionSeeder extends Seeder
 
         //create sensors
         $sensor1 = \App\Models\Sensor::create([
-            "sensor_reference" => "sensor 1",
+            "sensor_reference" => "lw001bg685",
             "description" => "Description sensor 1",
             "site_id" => $site1->id
         ]);
@@ -196,7 +196,7 @@ class PermissionSeeder extends Seeder
         ]);
 
         $sensor2 = \App\Models\Sensor::create([
-            "sensor_reference" => "sensor ",
+            "sensor_reference" => "tracker1468",
             "description" => "Description sensor 2",
             "site_id" => $site1->id
         ]);

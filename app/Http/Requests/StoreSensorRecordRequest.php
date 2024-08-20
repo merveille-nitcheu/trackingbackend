@@ -22,7 +22,6 @@ class StoreSensorRecordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "sensor_id" => "required|integer|min:1|exists:sensors,id",
             "longitude" => "nullable|decimal:0,10",
             "latitude" => "nullable|decimal:0,10",
             "temperature" => "nullable|decimal:0,4",
