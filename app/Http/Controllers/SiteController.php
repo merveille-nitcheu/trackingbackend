@@ -7,6 +7,7 @@ use App\Http\Requests\FindListSiteByRoleNameRequest;
 use App\Http\Requests\ListSiteByUserIdRequest;
 use App\Http\Requests\StoreSiteRequest;
 use App\Http\Requests\UpdateSiteRequest;
+use App\Models\Configuration;
 use App\Models\Site;
 use App\Models\User;
 use App\Models\UserSite;
@@ -198,5 +199,43 @@ class SiteController extends Controller
             ],"List sites fetched successfully");
         }
         return $this->error("Error while trying to get list sites for role name ".$data["role_name"]);
+    }
+
+    public function addTrakerColor(Request $request):JsonResponse{
+
+        $data = $request->all();
+
+        $config = Configuration::create([
+            'color' => $data['color'],
+            'site_id' => $data['site']['id'],
+            'trakerType' => $data['trakerType']['label'],
+            // 'zoom' => $sensor['sensor_records'][0]['sensor_id'],
+
+        ]);
+
+        if(isset($config)){
+            return $this->success([
+                "config" => $config
+            ],"config add successfully");
+        }
+        return $this->error("Error while trying to add tracker color for a site ");
+
+
+    }
+
+    public function getTrakerColorBySiteId($siteId):JsonResponse{
+
+        $site = Site::findOrFail($siteId);
+
+        $config = Configuration::where('site_id',$site->id)->get();
+
+        if(isset($config)){
+            return $this->success([
+                "config" => $config
+            ],"config fetched successfully");
+        }
+        return $this->error("Error while trying to add tracker color for a site ");
+
+
     }
 }

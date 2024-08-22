@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
+use App\Models\TypeNotification;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PermissionSeeder extends Seeder
 {
@@ -74,12 +75,12 @@ class PermissionSeeder extends Seeder
 
         // create sites
         $site1 = \App\Models\Site::create([
-            "name" => 'Site 1',
+            "name" => 'Douala',
             "description" => 'Paturages 500 boeufs',
             "address" => 'address 1',
             "radius" => 32000,
-            "longitude" => 13.3,
-            "latitude" => 9.40,
+            "longitude" => 9.694453,
+            "latitude" => 4.053770,
             "gmt" => 1,
             "compagny_id" => $company1->id
         ]);
@@ -189,10 +190,10 @@ class PermissionSeeder extends Seeder
 
         $rs1 = \App\Models\SensorRecord::create([
             "sensor_id" => $sensor1->id,
-            "longitude" => 13.3,
-            "latitude" => 9.46,
+            "longitude" => 9.694453,
+            "latitude" => 4.053770,
             "temperature" => 28,
-            "battery" => 75
+            "battery" => 05
         ]);
 
         $sensor2 = \App\Models\Sensor::create([
@@ -234,7 +235,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 13.1,
             "latitude" => 9.06,
             "temperature" => 28,
-            "battery" => 75
+            "battery" => 15
         ]);
 
         $sensor5 = \App\Models\Sensor::create([
@@ -248,7 +249,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 12.8,
             "latitude" => 9.30,
             "temperature" => 28,
-            "battery" => 75
+            "battery" => 20
         ]);
 
         $sensor6 = \App\Models\Sensor::create([
@@ -262,7 +263,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 10.16,
             "latitude" => 5.96,
             "temperature" => 28,
-            "battery" => 75
+            "battery" => 15
         ]);
 
         $sensor7 = \App\Models\Sensor::create([
@@ -276,7 +277,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 10.16,
             "latitude" => 5.56,
             "temperature" => 28,
-            "battery" => 75
+            "battery" => 15
         ]);
 
         $sensor8 = \App\Models\Sensor::create([
@@ -290,7 +291,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 13.3,
             "latitude" => 14.46,
             "temperature" => 28,
-            "battery" => 45
+            "battery" => 30
         ]);
 
         $sensor9 = \App\Models\Sensor::create([
@@ -304,7 +305,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 13.0,
             "latitude" => 14.1,
             "temperature" => 28,
-            "battery" => 45
+            "battery" => 30
         ]);
 
         $sensor10 = \App\Models\Sensor::create([
@@ -318,7 +319,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 9.4,
             "latitude" => 4.0,
             "temperature" => 28,
-            "battery" => 45
+            "battery" => 25
         ]);
 
         $sensor11 = \App\Models\Sensor::create([
@@ -360,7 +361,7 @@ class PermissionSeeder extends Seeder
             "longitude" => 11.0,
             "latitude" => 3.7,
             "temperature" => 28,
-            "battery" => 75
+            "battery" => 05
         ]);
 
         $sensor14 = \App\Models\Sensor::create([
@@ -396,6 +397,24 @@ class PermissionSeeder extends Seeder
             "description" => "Description sensor 16",
             "site_id" => $site5->id
         ]);
+
+
+        TypeNotification::create([
+            'wording' => 'Batterie faible',
+            'code' => 'bat-fb'
+        ]);
+
+        TypeNotification::create([
+            'wording' => 'Hors perimetre',
+            'code' => 'hs-pe'
+        ]);
+
+        TypeNotification::create([
+            'wording' => 'Traqueurs Eteints',
+            'code' => 'tr-et'
+        ]);
+
+
 
         $rs16 = \App\Models\SensorRecord::create([
             "sensor_id" => $sensor16->id,
