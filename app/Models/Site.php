@@ -30,6 +30,11 @@ class Site extends Model
         return $this->hasOne(UserSite::class, "site_id");
     }
 
+    public function configuration(): HasOne {
+        return $this->hasOne(Configuration::class);
+    }
+
+
     public function compagny(): BelongsTo {
         return $this->belongsTo(Compagny::class, "compagny_id");
     }

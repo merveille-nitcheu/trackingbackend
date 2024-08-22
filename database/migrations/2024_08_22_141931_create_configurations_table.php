@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sensor_payloads', function (Blueprint $table) {
+        Schema::create('configurations', function (Blueprint $table) {
             $table->id();
-            $table->string("device_id");
-            $table->decimal("temperature", 10)->nullable();
+            $table->string("color")->nullable();
+            $table->string("trakerType")->nullable();
+            $table->string("zoom")->nullable();
+            $table->foreignId("site_id")->constrained("sites")->cascadeOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sensor_payloads');
+        Schema::dropIfExists('configurations');
     }
 };

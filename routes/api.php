@@ -52,6 +52,7 @@ Route::middleware('auth:sanctum')->prefix('sensor')
             Route::post('get-list-actif-sensors-by-site-id',
                 [SensorController::class, 'findActifSensors']);
             Route::get('get-all-sensor', [SensorController::class, 'index']);
+            Route::post('add-notification', [SensorController::class, 'addNotification']);
 
         })->middleware('auth:sanctum');
 
@@ -75,6 +76,8 @@ Route::middleware('auth:sanctum')->prefix('site')
             Route::get('get-list-sites-for-user', [SiteController::class, 'getListSitesForUser']);
             Route::post('get-list-sites-by-user-id', [SiteController::class, 'getListSitesByUserId']);
             Route::post('get-list-sites-by-role-name', [SiteController::class, 'getListSitesByRoleName']);
+            Route::post('add-traker-color', [SiteController::class, 'addTrakerColor']);
+            Route::get('get-traker-color-by-site-id/{siteId}', [SiteController::class, 'getTrakerColorBySiteId']);
         });
 
 Route::middleware('auth:sanctum')->prefix('user-site')
@@ -85,6 +88,8 @@ Route::middleware('auth:sanctum')->prefix('user-site')
         });
 
 Route::middleware('auth:sanctum')->prefix('role')
+
+
         ->as('role.')
         ->group(function(){
             Route::get('get-list-role-auth-user', [RoleController::class, 'getListRoleForAuthUser']);
@@ -92,4 +97,7 @@ Route::middleware('auth:sanctum')->prefix('role')
         });
 
 
-        Route::post('sensor_record/store', [SensorRecordController::class, 'storeSensorRecord']);
+
+
+
+Route::post('get-list-actif-sensors-by-site-id',[SensorController::class, 'findActifSensors']);

@@ -27,4 +27,8 @@ class Sensor extends Model
     public function site(): BelongsTo {
         return $this->belongsTo(Site::class, "site_id");
     }
+
+    public function notifications(): HasMany {
+        return $this->hasMany(Notification::class);
+    }
 }
