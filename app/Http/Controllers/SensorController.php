@@ -21,7 +21,6 @@ use App\Http\Requests\UpdateSensorRequest;
 use App\Http\Requests\ActifSensorBySiteIdRequest;
 use App\Http\Requests\ListSensorsBySiteIdRequest;
 use App\Http\Requests\FindLastSensorRecordBySiteIdRequest;
-use App\Http\Resources\NotificationResource;
 
 class SensorController extends Controller
 {
@@ -246,7 +245,7 @@ class SensorController extends Controller
 
 
                                 ]);
-                                array_push($notifications,$notification);
+                                array_push($notifications, $notification);
 
                                 Mail::to('merveillenitcheu12@gmail.com')
                                     ->send(new AlertsMail($notifications));
@@ -276,11 +275,11 @@ class SensorController extends Controller
         return $this->error("Error when getting site data");
     }
 
-    public function addNotification (Request $request): JsonResponse
+    public function addNotification(Request $request): JsonResponse
     {
         $type_notification = TypeNotification::where('code', 'hs-pe')->first();
         $sensors = $request->all();
-        $notifications= [];
+        $notifications = [];
         foreach ($sensors as $key => $sensor) {
             $notification = Notification::create([
                 'batteryPercent' => $sensor['sensor_records'][0]['battery'],
@@ -291,21 +290,27 @@ class SensorController extends Controller
 
 
             ]);
-            array_push($notifications,$notification);
+            array_push($notifications, $notification);
         }
 
 
         Mail::to('merveillenitcheu12@gmail.com')
             ->send(new AlertsMail($notifications));
         return $this->success([
-            'data'=>$notifications
+            'data' => $notifications
         ], "Actif sensors fetched successfully");
     }
 
-    public function getNotification ()
+    public function getNotification(): JsonResponse
     {
-        return NotificationResource::collection(Notification::with('typeNotification')->orderByDesc('created_at')->distinct()->get());
+        $notifications = Notification::select('sensor_reference', 'batteryPercent', 'created_at', 'description')
+            ->orderByDesc('created_at')
+            ->get()
+            ->unique('sensor_reference', 'typeNotification_id');
 
 
+        return $this->success([
+            'notifications' => $notifications
+        ], "Notifications fetched successfully");
     }
 }

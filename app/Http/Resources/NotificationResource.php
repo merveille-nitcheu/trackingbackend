@@ -17,9 +17,8 @@ class NotificationResource extends JsonResource
         return [
             'batteryPercent' => ucfirst($this->batteryPercent),
             'sensor_reference' => ucfirst($this->sensor_reference),
-            'id' => $this->id,
             'created_at' => $this->created_at,
-            'typeNotification' => optional($this->typeNotification->wording),
+            // 'typeNotification' => optional($this->typeNotification->wording),
         ];
     }
 }
