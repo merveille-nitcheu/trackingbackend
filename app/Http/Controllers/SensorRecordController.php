@@ -31,16 +31,17 @@ class SensorRecordController extends Controller
         Log::info('Payload reçu :', ['data' => $payloadData]);
 
 
-        $deviceId = $payloadData['data']['end_device_ids']['device_id'];
+        $deviceId = $payloadData['end_device_ids']['device_id'];
         $sensor = Sensor::where('sensor_reference', $deviceId)->first();
+        $mode = $payloadData['uplink_message']['decoded_payload']['pack_type'];
 
         $data = [
             'sensor_id' => $sensor->id,
-            'battery' => floatval(str_replace('V', '', $payloadData['data']['uplink_message']['decoded_payload']['battery_voltage'])),
-            'longitude' => $payloadData['data']['uplink_message']['decoded_payload']['lon'],
-            'latitude' => $payloadData['data']['uplink_message']['decoded_payload']['lat'],
-            'temperature' => floatval(str_replace('°C', '', $payloadData['data']['uplink_message']['decoded_payload']['ic_temperature'])),
-            'created_at' => new \DateTimeImmutable($payloadData['time']),
+            'battery' => floatval(str_replace('V', '', $payloadData['uplink_message']['decoded_payload']['battery_voltage'])),
+            'longitude' => $mode =='fix_success'?$payloadData['uplink_message']['decoded_payload']['lon']:$payloadData['uplink_message']['locations']['frm-payload']['longitude'],
+            'latitude' => $mode =='fix_success'?$payloadData['uplink_message']['decoded_payload']['lat']:$payloadData['uplink_message']['locations']['frm-payload']['latitude'],
+            'temperature' => floatval(str_replace('°C', '', $payloadData['uplink_message']['decoded_payload']['ic_temperature'])),
+            'created_at' => new \DateTimeImmutable($payloadData['received_at']),
 
         ];
 
