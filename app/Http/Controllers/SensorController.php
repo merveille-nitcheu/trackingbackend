@@ -21,6 +21,7 @@ use App\Http\Requests\UpdateSensorRequest;
 use App\Http\Requests\ActifSensorBySiteIdRequest;
 use App\Http\Requests\ListSensorsBySiteIdRequest;
 use App\Http\Requests\FindLastSensorRecordBySiteIdRequest;
+use App\Http\Resources\NotificationResource;
 
 class SensorController extends Controller
 {
@@ -299,5 +300,12 @@ class SensorController extends Controller
         return $this->success([
             'data'=>$notifications
         ], "Actif sensors fetched successfully");
+    }
+
+    public function getNotification ()
+    {
+        return NotificationResource::collection(Notification::orderByDesc('created_at')->distinct()->get());
+
+
     }
 }

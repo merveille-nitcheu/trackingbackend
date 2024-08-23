@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->prefix('sensor')
                 [SensorController::class, 'findActifSensors']);
             Route::get('get-all-sensor', [SensorController::class, 'index']);
             Route::post('add-notification', [SensorController::class, 'addNotification']);
+            Route::get('get-notifications', [SensorController::class, 'getNotification']);
 
         })->middleware('auth:sanctum');
 
@@ -100,4 +101,4 @@ Route::middleware('auth:sanctum')->prefix('role')
 
 
 
-Route::post('get-list-actif-sensors-by-site-id',[SensorController::class, 'findActifSensors']);
+        Route::post('store', [SensorRecordController::class, 'storeSensorRecord']);

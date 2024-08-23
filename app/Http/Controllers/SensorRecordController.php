@@ -35,8 +35,8 @@ class SensorRecordController extends Controller
         $data = [
             'sensor_id' => $sensor->id,
             'battery' => floatval(str_replace('V', '', $payloadData['uplink_message']['decoded_payload']['battery_voltage'])),
-            'longitude' => $payloadData['uplink_message']['locations']['frm-payload']['longitude'],
-            'latitude' => $payloadData['uplink_message']['locations']['frm-payload']['latitude'],
+            'longitude' => $payloadData['uplink_message']['locations']['frm-payload']['lon'],
+            'latitude' => $payloadData['uplink_message']['locations']['frm-payload']['lat'],
             'temperature' => floatval(str_replace('°C', '', $payloadData['uplink_message']['decoded_payload']['ic_temperature'])),
             'created_at' => new \DateTimeImmutable($payloadData['received_at']),
         ];
