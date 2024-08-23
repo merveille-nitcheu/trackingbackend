@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 use App\Models\Sensor;
 use App\Models\SensorRecord;
-use Illuminate\Http\Request;
-use App\Events\NewRecordSend;
+use Illuminate\Http\Request;use App\Events\NewRecordSend;
 use App\Models\SensorPayload;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -27,11 +26,13 @@ class SensorRecordController extends Controller
      */
     public function storeSensorRecord(StoreSensorRecordRequest $request): JsonResponse
     {
-
+		 
         $payloadData = $request->all();
+    Log::info('Payload reçu :', ['data' => $payloadData]);
+
         $deviceId = $payloadData['end_device_ids']['device_id'];
         $sensor = Sensor::where('sensor_reference', $deviceId)->first();
-        Log::info('Payload reçu :', ['data' => $payloadData]);
+       
         $data = [
             'sensor_id' => $sensor->id,
             'battery' => floatval(str_replace('V', '', $payloadData['uplink_message']['decoded_payload']['battery_voltage'])),
