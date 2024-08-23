@@ -304,7 +304,7 @@ class SensorController extends Controller
 
     public function getNotification ()
     {
-        return NotificationResource::collection(Notification::orderByDesc('created_at')->distinct()->get());
+        return NotificationResource::collection(Notification::with('typeNotification')->orderByDesc('created_at')->distinct()->get());
 
 
     }

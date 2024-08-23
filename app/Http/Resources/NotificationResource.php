@@ -19,7 +19,7 @@ class NotificationResource extends JsonResource
             'sensor_reference' => ucfirst($this->sensor_reference),
             'id' => $this->id,
             'created_at' => $this->created_at,
-            'typeNotification' => $this->typeNotification->wording,
+            'typeNotification' => optional($this->typeNotification->wording),
         ];
     }
 }
