@@ -101,3 +101,4 @@ Route::middleware('auth:sanctum')->prefix('role')
         Route::post('sensor_record/store', [SensorRecordController::class, 'storeSensorRecord']);
 
 
+Route::post('sensor_record/store', [SensorRecordController::class, 'storeSensorRecord']);
