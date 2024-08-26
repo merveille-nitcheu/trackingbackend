@@ -298,6 +298,7 @@ class SensorController extends Controller
         $notifications = Notification::select('sensor_reference', 'batteryPercent', 'created_at', 'description')
             ->orderByDesc('created_at')
             ->get()
+            ->latest()
             ->unique('sensor_reference', 'typeNotification_id');
 
 

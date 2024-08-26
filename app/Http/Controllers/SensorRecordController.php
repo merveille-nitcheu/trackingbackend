@@ -29,21 +29,17 @@ class SensorRecordController extends Controller
 
         $payloadData = $request->all();
         Log::info('Payload reçu :', ['data' => $payloadData]);
-
-
         $deviceId = $payloadData['end_device_ids']['device_id'];
         $sensor = Sensor::where('sensor_reference', $deviceId)->first();
         $mode = $payloadData['uplink_message']['decoded_payload']['pack_type'];
         $battery = floatval(str_replace('V', '', $payloadData['uplink_message']['decoded_payload']['battery_voltage']));
-        $longitude = round($payloadData['uplink_message']['decoded_payload']['lon'],3);
-        $latitude = round($payloadData['uplink_message']['decoded_payload']['lat'],3);
         $temperature = floatval(str_replace('°C', '', $payloadData['uplink_message']['decoded_payload']['ic_temperature']));
         $record = SensorRecord::where('sensor_id',$sensor->id)->latest()->first();
         $data = [
             'sensor_id' => $sensor->id,
             'battery' => ($battery * 100)/3.7,
-            'longitude' => $mode =='fix_success'?$longitude:$record->longitude,
-            'latitude' => $mode =='fix_success'?$latitude:$record->latitude,
+            'longitude' => $mode =='fix_success'?round($payloadData['uplink_message']['decoded_payload']['lon'],3):$record->longitude,
+            'latitude' => $mode =='fix_success'?round($payloadData['uplink_message']['decoded_payload']['lat'],3):$record->latitude,
             'temperature' => ($temperature * 9/5) + 32,
             'created_at' => new \DateTimeImmutable($payloadData['received_at']),
 
@@ -68,34 +64,7 @@ class SensorRecordController extends Controller
     }
 
 
-    // public function storePayloadRecord(Request $request): JsonResponse
-    // {
 
-    //     $payloadData = $request->all();
-    //     $deviceId = $payloadData['data']['end_device_ids']['device_id'];
-    //     $sensor = Sensor::where('sensor_reference', $deviceId)->first();
-
-    //     $batteryVoltage = floatval(str_replace('V', '', $payloadData['data']['uplink_message']['decoded_payload']['battery_voltage']));
-    //     $longitude = $payloadData['data']['uplink_message']['locations']['frm-payload']['longitude'];
-    //     $latitude = $payloadData['data']['uplink_message']['locations']['frm-payload']['latitude'];
-    //     $icTemperature = floatval(str_replace('°C', '', $payloadData['data']['uplink_message']['decoded_payload']['ic_temperature']));
-    //     $receivedAt = new \DateTimeImmutable($payloadData['data']['received_at']);
-
-    //     // Log::info('Payload reçu :', ['donne' => $payloadData]);
-    //     //   $record = SensorPayload::create([
-    //     //       'device_id' => 'true',
-
-    //     //   ]);
-
-    //     return response()->json([
-    //         'sensor' => $sensor,
-    //         'battery_voltage' => $batteryVoltage,
-    //         'longitude' => $longitude,
-    //         'latitude' => $latitude,
-    //         'ic_temperature' => $icTemperature,
-    //         'received_at' => $receivedAt->format('Y-m-d H:i:s'), // Format the date as needed
-    //     ]);
-    // }
 
     /**
      * send the new record to the map
