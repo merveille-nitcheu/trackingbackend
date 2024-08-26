@@ -34,13 +34,17 @@ class SensorRecordController extends Controller
         $deviceId = $payloadData['end_device_ids']['device_id'];
         $sensor = Sensor::where('sensor_reference', $deviceId)->first();
         $mode = $payloadData['uplink_message']['decoded_payload']['pack_type'];
-
+        $battery = floatval(str_replace('V', '', $payloadData['uplink_message']['decoded_payload']['battery_voltage']));
+        $longitude = round($payloadData['uplink_message']['decoded_payload']['lon'],3);
+        $latitude = round($payloadData['uplink_message']['decoded_payload']['lat'],3);
+        $temperature = floatval(str_replace('°C', '', $payloadData['uplink_message']['decoded_payload']['ic_temperature']));
+        $record = SensorRecord::where('sensor_id',$sensor->id)->latest()->first();
         $data = [
             'sensor_id' => $sensor->id,
-            'battery' => floatval(str_replace('V', '', $payloadData['uplink_message']['decoded_payload']['battery_voltage'])),
-            'longitude' => $mode =='fix_success'?$payloadData['uplink_message']['decoded_payload']['lon']:$payloadData['uplink_message']['locations']['frm-payload']['longitude'],
-            'latitude' => $mode =='fix_success'?$payloadData['uplink_message']['decoded_payload']['lat']:$payloadData['uplink_message']['locations']['frm-payload']['latitude'],
-            'temperature' => floatval(str_replace('°C', '', $payloadData['uplink_message']['decoded_payload']['ic_temperature'])),
+            'battery' => ($battery * 100)/3.7,
+            'longitude' => $mode =='fix_success'?$longitude:$record->longitude,
+            'latitude' => $mode =='fix_success'?$latitude:$record->latitude,
+            'temperature' => ($temperature * 9/5) + 32,
             'created_at' => new \DateTimeImmutable($payloadData['received_at']),
 
         ];

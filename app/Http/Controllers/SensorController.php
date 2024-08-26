@@ -224,20 +224,12 @@ class SensorController extends Controller
                         array_push($listActifSensors, $listSensorsWithLastRecords[$i]);
 
                         $batteryVoltage = (int) $listSensorsWithLastRecords[$i]->sensorRecords[0]["battery"];
-                        $batteryPercentage = ($batteryVoltage / 3.7) * 100;
-
-
-                        if ($batteryPercentage <= 20) {
+                        if ($batteryVoltage <= 20) {
                             array_push($listLowBatSensors, $listSensorsWithLastRecords[$i]);
                             if (count($listLowBatSensors) > 0) {
-
-
-
                                 $type_notification = TypeNotification::where('code', 'bat-fb')->first();
-
-
                                 $notification  = Notification::create([
-                                    'batteryPercent' => $batteryPercentage,
+                                    'batteryPercent' => $batteryVoltage,
                                     'sensor_reference' => $listSensorsWithLastRecords[$i]->sensor_reference,
                                     'typeNotification_id' => $type_notification->id,
                                     'sensor_id' => $listSensorsWithLastRecords[$i]->id,
