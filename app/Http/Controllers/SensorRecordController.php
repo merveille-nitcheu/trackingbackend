@@ -38,8 +38,8 @@ class SensorRecordController extends Controller
         $data = [
             'sensor_id' => $sensor->id,
             'battery' => ($battery * 100)/3.7,
-            'longitude' => $mode =='fix_false'?$record->longitude:round($payloadData['uplink_message']['decoded_payload']['lon'],3),
-            'latitude' => $mode =='fix_false'?$record->latitude:round($payloadData['uplink_message']['decoded_payload']['lat'],3),
+            'longitude' => $mode =='fix_false'?$record->longitude:$payloadData['uplink_message']['decoded_payload']['lon'],
+            'latitude' => $mode =='fix_false'?$record->latitude:$payloadData['uplink_message']['decoded_payload']['lat'],
             'temperature' => ($temperature * 9/5) + 32,
             'created_at' => new \DateTimeImmutable($payloadData['received_at']),
 
