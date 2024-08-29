@@ -296,6 +296,7 @@ class SensorController extends Controller
     public function getNotification(): JsonResponse
     {
         $notifications = Notification::select('sensor_reference', 'batteryPercent', 'created_at', 'description')
+            ->whereDate('created_at', now()->format('Y-m-d'))
             ->orderByDesc('created_at')
             ->get()
             ->unique('sensor_reference', 'typeNotification_id');

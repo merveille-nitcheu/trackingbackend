@@ -89,8 +89,8 @@ class SensorRecordController extends Controller
         $data = $request->validated();
         $sensor = Sensor::with(['site'])->find($data['sensor_id']);
         if (isset($sensor)) {
-            $dateStart = Carbon::parse($data["date_start"])->subHours($sensor->site->gmt);
-            $dateEnd = Carbon::parse($data["date_end"])->subHours($sensor->site->gmt);
+            $dateStart = Carbon::parse($data["date_start"])->subHours($sensor->site->gmt)->startOfHour();
+            $dateEnd = Carbon::parse($data["date_end"])->subHours($sensor->site->gmt)->endOfHour();
             $listSensorRecords = SensorRecord::where("sensor_id", $data['sensor_id'])
                 ->whereBetween("created_at", [$dateStart, $dateEnd])
                 ->orderBy("created_at", "desc")
