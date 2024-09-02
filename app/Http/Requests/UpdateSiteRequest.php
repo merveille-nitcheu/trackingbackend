@@ -30,7 +30,9 @@ class UpdateSiteRequest extends FormRequest
             "longitude" => "nullable|decimal:0,10",
             "latitude" => "nullable|decimal:0,10",
             "gmt" => "nullable|decimal:0,4",
-            "compagny_id" => "nullable|integer|min:1|exists:compagnies,id"
+            "compagny_id" => "nullable|integer|min:1|exists:compagnies,id",
+            "nbsubsite" => "nullable|integer",
+
         ];
     }
 }
