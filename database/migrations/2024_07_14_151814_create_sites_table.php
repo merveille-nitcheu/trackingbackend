@@ -19,9 +19,14 @@ return new class extends Migration
             $table->decimal("longitude", 10)->nullable();
             $table->decimal("latitude", 10)->nullable();
             $table->double("gmt");
+            $table->integer("nbsubsite")->default(0);
             $table->foreignId("compagny_id")->constrained("compagnies")->cascadeOnDelete();
+            $table->foreignId('site_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
+
+
+
         });
     }
 

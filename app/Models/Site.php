@@ -19,7 +19,9 @@ class Site extends Model
         "longitude",
         "latitude",
         "gmt",
-        "compagny_id"
+        "compagny_id",
+        "site_id",
+        "nbsubsite"
     ];
 
     public function sensors(): HasMany {
@@ -37,5 +39,16 @@ class Site extends Model
 
     public function compagny(): BelongsTo {
         return $this->belongsTo(Compagny::class, "compagny_id");
+    }
+
+    public function child()
+    {
+        return $this->hasMany(Site::class);
+
+    }
+    public function parent()
+    {
+        return $this->BelongsTo(Site::class);
+
     }
 }

@@ -23,13 +23,14 @@ class SiteController extends Controller
      * @param StoreSiteRequest $request
      * @return JsonResponse
      */
-    public function store(StoreSiteRequest $request):JsonResponse {
+    public function store(StoreSiteRequest $request): JsonResponse
+    {
         $data = $request->validated();
         $site = Site::create($data);
-        if(isset($site)){
+        if (isset($site)) {
             return $this->success([
                 "site" => $site
-            ],"Site created successfully");
+            ], "Site created successfully");
         }
         return $this->error("Error while creating site");
     }
@@ -40,17 +41,33 @@ class SiteController extends Controller
      * @param UpdateSiteRequest $request
      * @return JsonResponse
      */
-    public function update(UpdateSiteRequest $request): JsonResponse {
+    public function update(UpdateSiteRequest $request): JsonResponse
+    {
         $data = $request->validated();
         $site = Site::find($data["site_id"]);
-        if(isset($site)){
+        $nbsite = $request->nbsubsite;
+
+        if (isset($site)) {
             $dataUpdate = array_diff_key($data, array_flip(["site_id"]));
             $status = $site->update($dataUpdate);
-            if(isset($status) && $status == true){
+            for ($i = 0; $i < $nbsite; $i++) {
+                $site = Site::create([
+                  'name' => 'sous-site'.$i,
+                  'description' => $data["description"],
+                  'adresse' => $request->address,
+                  'gmt' => $data["gmt"],
+                  'longitude' => $data["longitude"],
+                  'latitude' => $data["latitude"],
+                  'radius' => $data["radius"],
+                  'compagny_id' => $data["compagny_id"],
+                  'site_id' => $data["site_id"],
+                ]);
+            }
+            if (isset($status) && $status == true) {
                 return $this->success([
                     "action_status" => $status,
                     "site" => $site,
-                ],"Site updated successfully");
+                ], "Site updated successfully");
             }
             $this->error("Error while updating site");
         }
@@ -64,16 +81,17 @@ class SiteController extends Controller
      * @param DeleteSiteRequest $request
      * @return JsonResponse
      */
-    public function delete(DeleteSiteRequest $request): JsonResponse {
+    public function delete(DeleteSiteRequest $request): JsonResponse
+    {
         $data = $request->validated();
         $site = Site::find($data["site_id"]);
-        if(isset($site)){
+        if (isset($site)) {
             $status = $site->delete();
-            if(isset($status) && $status == true){
+            if (isset($status) && $status == true) {
                 return $this->success([
                     "action_status" => $status,
                     "site" => $site,
-                ],"Site deleted successfully");
+                ], "Site deleted successfully");
             }
             $this->error("Error while deleting site");
         }
@@ -86,44 +104,47 @@ class SiteController extends Controller
      *
      * @return JsonResponse
      */
-    public function getListSitesForUser():JsonResponse {
+    public function getListSitesForUser(): JsonResponse
+    {
         $user = User::find(Auth()->user()->id);
         $companyId = $user->compagny_id;
 
-        if($user->hasRole(['Super-Admin', 'Responsable general'])){
+        if ($user->hasRole(['Super-Admin', 'Responsable general'])) {
             $listSites = Site::where("compagny_id", $companyId)
-                                ->with([
-                                        'sensors.sensorRecords' => function ($query) {
-                                            $query->orderBy('created_at','desc')
-                                                ->limit(1)->get();
-                                            }, 'userSite.user'
-                                        ])->get();
-            if(isset($listSites) && count($listSites)>0){
+                ->with([
+                    'sensors.sensorRecords' => function ($query) {
+                        $query->orderBy('created_at', 'desc')
+                            ->limit(1)->get();
+                    },
+                    'userSite.user'
+                ])->where('site_id', null)->get();
+            if (isset($listSites) && count($listSites) > 0) {
                 return $this->success([
                     "list_sites" => $listSites,
-                ],"User site fetched successfully");
-            }else{
+                ], "User site fetched successfully");
+            } else {
                 return $this->error("Error while getting list sites for user");
             }
-        }else{
+        } else {
             $userSite = UserSite::where("user_id", $user->id)->first();
-            if(isset($userSite)){
+            if (isset($userSite)) {
                 $listSites = Site::where("id", $userSite->site_id)
-                                ->with([
-                                        'sensors.sensorRecords' => function ($query) {
-                                            $query->orderBy('created_at','desc')
-                                                ->limit(1)->get();
-                                            } , 'userSite.user'
-                                        ])->get();
+                    ->with([
+                        'sensors.sensorRecords' => function ($query) {
+                            $query->orderBy('created_at', 'desc')
+                                ->limit(1)->get();
+                        },
+                        'userSite.user'
+                    ])->where('site_id', null)->get();
 
-                if(isset($listSites) && count($listSites)>0){
+                if (isset($listSites) && count($listSites) > 0) {
                     return $this->success([
                         "list_sites" => $listSites,
-                    ],"User site fetched successfully");
-                }else{
+                    ], "User site fetched successfully");
+                } else {
                     return $this->error("Error while getting list sites for user");
                 }
-            }else{
+            } else {
                 return $this->error("Error while getting user site for list sites for the current user");
             }
         }
@@ -134,45 +155,48 @@ class SiteController extends Controller
      *
      * @return JsonResponse
      */
-    public function getListSitesByUserId(ListSiteByUserIdRequest $request):JsonResponse {
+    public function getListSitesByUserId(ListSiteByUserIdRequest $request): JsonResponse
+    {
         $data = $request->validated();
         $user = User::find($data['user_id']);
         $companyId = $user->compagny_id;
 
-        if($user->hasRole(['Super-Admin', 'Responsable general'])){
+        if ($user->hasRole(['Super-Admin', 'Responsable general'])) {
             $listSites = Site::where("compagny_id", $companyId)
-                                ->with([
-                                        'sensors.sensorRecords' => function ($query) {
-                                            $query->orderBy('created_at','desc')
-                                                ->limit(1)->get();
-                                            }, 'userSite.user'
-                                        ])->get();
-            if(isset($listSites) && count($listSites)>0){
+                ->with([
+                    'sensors.sensorRecords' => function ($query) {
+                        $query->orderBy('created_at', 'desc')
+                            ->limit(1)->get();
+                    },
+                    'userSite.user'
+                ])->where('site_id', null)->get();
+            if (isset($listSites) && count($listSites) > 0) {
                 return $this->success([
                     "list_sites" => $listSites,
-                ],"User site fetched successfully");
-            }else{
+                ], "User site fetched successfully");
+            } else {
                 return $this->error("Error while getting list sites for user");
             }
-        }else{
+        } else {
             $userSite = UserSite::where("user_id", $user->id)->first();
-            if(isset($userSite)){
+            if (isset($userSite)) {
                 $listSites = Site::where("id", $userSite->site_id)
-                                ->with([
-                                        'sensors.sensorRecords' => function ($query) {
-                                            $query->orderBy('created_at','desc')
-                                                ->limit(1)->get();
-                                            } , 'userSite.user'
-                                        ])->get();
+                    ->with([
+                        'sensors.sensorRecords' => function ($query) {
+                            $query->orderBy('created_at', 'desc')
+                                ->limit(1)->get();
+                        },
+                        'userSite.user'
+                    ])->where('site_id', null)->get();
 
-                if(isset($listSites) && count($listSites)>0){
+                if (isset($listSites) && count($listSites) > 0) {
                     return $this->success([
                         "list_sites" => $listSites,
-                    ],"User site fetched successfully");
-                }else{
+                    ], "User site fetched successfully");
+                } else {
                     return $this->error("Error while getting list sites for user");
                 }
-            }else{
+            } else {
                 return $this->error("Error while getting user site for list sites for the current user");
             }
         }
@@ -184,24 +208,26 @@ class SiteController extends Controller
      * @param FindListSiteByRoleNameRequest
      * @return JsonResponse
      */
-    public function getListSitesByRoleName(FindListSiteByRoleNameRequest $request): JsonResponse{
+    public function getListSitesByRoleName(FindListSiteByRoleNameRequest $request): JsonResponse
+    {
         $data = $request->validated();
         $user = User::find(Auth()->user()->id);
         $companyId = $user->compagny_id;
-        if($data['role_name'] == 'Responsable de site'){
-            $listSites = Site::where('compagny_id', $companyId)->get();
-        }else{
+        if ($data['role_name'] == 'Responsable de site') {
+            $listSites = Site::where('compagny_id', $companyId)->where('site_id', null)->get();
+        } else {
             $listSites = [];
         }
-        if(isset($listSites)){
+        if (isset($listSites)) {
             return $this->success([
                 "list_sites" => $listSites
-            ],"List sites fetched successfully");
+            ], "List sites fetched successfully");
         }
-        return $this->error("Error while trying to get list sites for role name ".$data["role_name"]);
+        return $this->error("Error while trying to get list sites for role name " . $data["role_name"]);
     }
 
-    public function addTrakerColor(Request $request):JsonResponse{
+    public function addTrakerColor(Request $request): JsonResponse
+    {
 
         $data = $request->all();
 
@@ -213,29 +239,28 @@ class SiteController extends Controller
 
         ]);
 
-        if(isset($config)){
+        if (isset($config)) {
             return $this->success([
                 "config" => $config
-            ],"config add successfully");
+            ], "config add successfully");
         }
         return $this->error("Error while trying to add tracker color for a site ");
-
-
     }
 
-    public function getTrakerColorBySiteId($siteId):JsonResponse{
+    public function getTrakerColorBySiteId($siteId): JsonResponse
+    {
 
         $site = Site::findOrFail($siteId);
 
-        $config = Configuration::where('site_id',$site->id)->get();
+        $config = Configuration::where('site_id', $site->id)->get();
 
-        if(isset($config)){
+        if (isset($config)) {
             return $this->success([
                 "config" => $config
-            ],"config fetched successfully");
+            ], "config fetched successfully");
         }
         return $this->error("Error while trying to add tracker color for a site ");
-
-
     }
+
+
 }

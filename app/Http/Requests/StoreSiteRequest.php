@@ -29,7 +29,9 @@ class StoreSiteRequest extends FormRequest
             "longitude" => "nullable|decimal:0,10",
             "latitude" => "nullable|decimal:0,10",
             "gmt" => "required|decimal:0,4",
-            "compagny_id" => "required|integer|min:1|exists:compagnies,id"
+            "nbsubsite" => "nullable|integer",
+            "compagny_id" => "required|integer|min:1|exists:compagnies,id",
+            "site_id" => "integer|min:1|exists:sites,id"
         ];
     }
 }
